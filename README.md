@@ -7,9 +7,9 @@
 cd server && npm i && node index
 ```
 
-- install run ui
+- install run client
 ```
-cd ui && npm i && npm start
+cd client && npm i && npm start
 ```
 
 Reading Material:
