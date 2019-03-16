@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 let socket = new WebSocket('ws://localhost:8080');
 
 function App () {
+  let messagesRef = useRef([])
   let [inputValue, setInputValue] = useState('')
   let [username, setUsername] = useState('alex')
   let [messages, setMessages] = useState([])
   
-  useEffect(() => {
-    let onMessage = (event) => {
+  useEffect(() => {    
+    socket.addEventListener('message', event => {
       let message = JSON.parse(event.data)
       
       if (message.type === 'history') {
@@ -17,16 +18,11 @@ function App () {
       }
       
       if (message.type === 'single_message') {
-        setMessages([message.data, ...messages])
+        messagesRef.current = [message.data, ...messagesRef.current]
+        setMessages(messagesRef.current)
       }
-    }
-    
-    socket.addEventListener('message', onMessage)
-    
-    return () => {
-      socket.removeEventListener('message', onMessage)
-    }
-  }, [messages])
+    })
+  }, [])
   
   return (
     <div className="App">
