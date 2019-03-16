@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 let socket = new WebSocket('ws://localhost:8080');
 
 function App () {
-  let messagesRef = useRef([])
   let [inputValue, setInputValue] = useState('')
   let [username, setUsername] = useState('alex')
   let [messages, setMessages] = useState([])
@@ -18,8 +17,7 @@ function App () {
       }
       
       if (message.type === 'single_message') {
-        messagesRef.current = [message.data, ...messagesRef.current]
-        setMessages(messagesRef.current)
+        setMessages(prevMessages => [message.data, ...prevMessages])
       }
     })
   }, [])
